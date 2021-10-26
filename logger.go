@@ -2,7 +2,9 @@ package log
 
 import "fmt"
 
-type Logger struct{}
+type Logger struct {
+	Hide bool
+}
 
 func (l Logger) Log(a ...interface{}) {
 	fmt.Println(a...)
