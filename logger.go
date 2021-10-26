@@ -15,7 +15,7 @@ func (l Logger) getPrefix() string {
 		return ""
 	}
 
-	return strings.Join(l.prefixes, ": ")
+	return strings.Join(l.prefixes, ": ") + ":"
 }
 
 func (l Logger) Prefix(newprevix ...string) Logger {
