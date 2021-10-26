@@ -7,17 +7,25 @@ type Logger struct {
 }
 
 func (l Logger) Log(a ...interface{}) {
-	fmt.Println(a...)
+	if !l.Hide {
+		fmt.Println(a...)
+	}
 }
 
 func (l Logger) Logf(format string, a ...interface{}) {
-	fmt.Printf(format, a...)
+	if !l.Hide {
+		fmt.Printf(format, a...)
+	}
 }
 
 func (l Logger) Begin() {
-	fmt.Println("BEGIN")
+	if !l.Hide {
+		fmt.Println("BEGIN")
+	}
 }
 
 func (l Logger) End() {
-	fmt.Println("END")
+	if !l.Hide {
+		fmt.Println("END")
+	}
 }
