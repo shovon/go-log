@@ -38,13 +38,9 @@ func (l Logger) Logf(format string, a ...interface{}) {
 }
 
 func (l Logger) Begin() {
-	if !l.Hide {
-		fmt.Println(l.getPrefix() + " " + "BEGIN")
-	}
+	l.Log("BEGIN")
 }
 
 func (l Logger) End() {
-	if !l.Hide {
-		fmt.Println(l.getPrefix() + " " + "END")
-	}
+	l.Log("END")
 }
