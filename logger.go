@@ -6,11 +6,13 @@ import (
 	"io"
 	"runtime"
 	"strings"
+	"time"
 )
 
 type Logger struct {
-	writer   io.Writer
-	prefixes []string
+	writer    io.Writer
+	prefixes  []string
+	startTime time.Time
 }
 
 func NewLogger(writer io.Writer) Logger {
@@ -29,6 +31,7 @@ func (l Logger) Prefix(newprevix ...string) Logger {
 	return Logger{
 		l.writer,
 		append(l.prefixes, newprevix...),
+		l.startTime,
 	}
 }
 
@@ -74,10 +77,15 @@ func (l Logger) Begin(newprefix ...string) Logger {
 		newprefix = append([]string{fnName}, newprefix...)
 	}
 	newL := l.Prefix(newprefix...)
+	newL.startTime = time.Now()
 	newL.Log("BEGIN")
 	return newL
 }
 
 func (l Logger) End() {
-	l.Log("END")
+	if l.startTime.IsZero() {
+		l.Log("END")
+		return
+	}
+	l.Logf("END δ=%dµs", time.Since(l.startTime).Microseconds())
 }

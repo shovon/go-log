@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestBeginEnd(t *testing.T) {
@@ -13,6 +14,7 @@ func TestBeginEnd(t *testing.T) {
 	expected := "TestBeginEnd: BEGIN\nSomething\nEND\n"
 
 	logger.Begin()
+	logger.startTime = time.Time{}
 	logger.Log("Something")
 	logger.End()
 
@@ -53,6 +55,7 @@ func TestBeginEndPrefix(t *testing.T) {
 	expected := "TestBeginEndPrefix: apple: banana: cherry: BEGIN\nTestBeginEndPrefix: apple: banana: cherry: hello\nTestBeginEndPrefix: apple: banana: cherry: date: here\nTestBeginEndPrefix: apple: banana: cherry: END\n"
 
 	prefixedLogger := logger.Begin("apple", "banana", "cherry")
+	prefixedLogger.startTime = time.Time{}
 	prefixedLogger.Log("hello")
 	plog := prefixedLogger.Prefix("date")
 	plog.Log("here")
