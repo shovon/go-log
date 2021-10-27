@@ -1,8 +1,10 @@
 package log
 
 import (
+	"errors"
 	"fmt"
 	"io"
+	"runtime"
 	"strings"
 )
 
@@ -46,7 +48,31 @@ func (l Logger) Logf(format string, a ...interface{}) {
 	fmt.Fprintf(l.writer, "%s%s\n", l.prefix(), fmt.Sprintf(format, a...))
 }
 
+func getFunc() (*runtime.Func, error) {
+	ptr, _, _, ok := runtime.Caller(3)
+	if !ok {
+		return nil, errors.New("unable to get function name")
+	}
+	return runtime.FuncForPC(ptr), nil
+}
+
+func getFunctionName() (string, error) {
+	fn, err := getFunc()
+	if err != nil {
+		return "", err
+	}
+	name := strings.Split(fn.Name(), ".")
+	if len(name) <= 0 {
+		return "", errors.New("the function name was weird")
+	}
+	return name[len(name)-1], nil
+}
+
 func (l Logger) Begin(newprefix ...string) Logger {
+	fnName, err := getFunctionName()
+	if err == nil {
+		newprefix = append([]string{fnName}, newprefix...)
+	}
 	newL := l.Prefix(newprefix...)
 	newL.Log("BEGIN")
 	return newL

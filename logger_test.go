@@ -10,13 +10,14 @@ func TestBeginEnd(t *testing.T) {
 	sb := &strings.Builder{}
 	logger := NewLogger(sb)
 
-	expected := "BEGIN\nSomething\nEND\n"
+	expected := "TestBeginEnd: BEGIN\nSomething\nEND\n"
 
 	logger.Begin()
 	logger.Log("Something")
 	logger.End()
 
 	if expected != sb.String() {
+		fmt.Printf("Expected:\n\n%s\n\nBut got:\n\n%s\n", expected, sb.String())
 		t.Fail()
 	}
 }
@@ -49,7 +50,7 @@ func TestBeginEndPrefix(t *testing.T) {
 	sb := &strings.Builder{}
 	logger := NewLogger(sb)
 
-	expected := "apple: banana: cherry: BEGIN\napple: banana: cherry: hello\napple: banana: cherry: date: here\napple: banana: cherry: END\n"
+	expected := "TestBeginEndPrefix: apple: banana: cherry: BEGIN\nTestBeginEndPrefix: apple: banana: cherry: hello\nTestBeginEndPrefix: apple: banana: cherry: date: here\nTestBeginEndPrefix: apple: banana: cherry: END\n"
 
 	prefixedLogger := logger.Begin("apple", "banana", "cherry")
 	prefixedLogger.Log("hello")
