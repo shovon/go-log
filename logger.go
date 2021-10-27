@@ -11,8 +11,8 @@ type Logger struct {
 	prefixes []string
 }
 
-func NewLogger(writer io.Writer) Logger {
-	return Logger{writer, []string{}}
+func (l *Logger) SetWriter(writer io.Writer) {
+	l.writer = writer
 }
 
 func (l Logger) prefix() string {

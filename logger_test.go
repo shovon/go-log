@@ -8,7 +8,8 @@ import (
 
 func TestBeginEnd(t *testing.T) {
 	sb := &strings.Builder{}
-	logger := NewLogger(sb)
+	logger := Logger{}
+	logger.SetWriter(sb)
 
 	expected := "BEGIN\nSomething\nEND\n"
 
