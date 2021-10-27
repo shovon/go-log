@@ -11,8 +11,8 @@ type Logger struct {
 	prefixes []string
 }
 
-func (l *Logger) SetWriter(writer io.Writer) {
-	l.writer = writer
+func NewLogger(writer io.Writer) Logger {
+	return Logger{writer: writer}
 }
 
 func (l Logger) prefix() string {
@@ -46,8 +46,10 @@ func (l Logger) Logf(format string, a ...interface{}) {
 	fmt.Fprintf(l.writer, "%s%s\n", l.prefix(), fmt.Sprintf(format, a...))
 }
 
-func (l Logger) Begin() {
-	l.Log("BEGIN")
+func (l Logger) Begin(newprefix ...string) Logger {
+	newL := l.Prefix(newprefix...)
+	newL.Log("BEGIN")
+	return newL
 }
 
 func (l Logger) End() {
