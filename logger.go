@@ -189,5 +189,5 @@ func (l Logger) End() {
 		l.Log("END")
 		return
 	}
-	l.Logf("END δ=%dµs", time.Since(l.startTime).Microseconds())
+	l.Logf("END δ=%v", time.Since(l.startTime).Microseconds())
 }
