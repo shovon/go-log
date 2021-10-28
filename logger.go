@@ -13,10 +13,11 @@ type Logger struct {
 	writer    io.Writer
 	prefixes  []string
 	startTime time.Time
+	level     uint8
 }
 
-func NewLogger(writer io.Writer) Logger {
-	return Logger{writer: writer}
+func NewLogger(writer io.Writer, level uint8) Logger {
+	return Logger{writer: writer, level: level}
 }
 
 func (l Logger) prefix() string {
@@ -32,23 +33,100 @@ func (l Logger) Prefix(newprevix ...string) Logger {
 		l.writer,
 		append(l.prefixes, newprevix...),
 		l.startTime,
+		l.level,
 	}
 }
 
-func (l Logger) Log(a ...interface{}) {
+func (l Logger) Alert(a ...interface{}) {
+	if l.level >= 1 {
+		l.log(a...)
+	}
+}
+func (l Logger) Alertf(format string, a ...interface{}) {
+	if l.level >= 1 {
+		l.logf(format, a...)
+	}
+}
+
+func (l Logger) Error(a ...interface{}) {
+	if l.level >= 1 {
+		l.log(a...)
+	}
+}
+func (l Logger) Errorf(format string, a ...interface{}) {
+	if l.level >= 1 {
+		l.logf(format, a...)
+	}
+}
+
+func (l Logger) Warn(a ...interface{}) {
+	if l.level >= 2 {
+		l.log(a...)
+	}
+}
+func (l Logger) Warnf(format string, a ...interface{}) {
+	if l.level >= 2 {
+		l.logf(format, a...)
+	}
+}
+
+func (l Logger) Highlight(a ...interface{}) {
+	if l.level >= 3 {
+		l.log(a...)
+	}
+}
+func (l Logger) Highlightf(format string, a ...interface{}) {
+	if l.level >= 3 {
+		l.logf(format, a...)
+	}
+}
+
+func (l Logger) Inform(a ...interface{}) {
+	if l.level >= 4 {
+		l.log(a...)
+	}
+}
+func (l Logger) Informf(format string, a ...interface{}) {
+	if l.level >= 4 {
+		l.logf(format, a...)
+	}
+}
+
+func (l Logger) log(a ...interface{}) {
 	if l.writer == nil {
 		return
 	}
 
 	fmt.Fprintf(l.writer, "%s%s\n", l.prefix(), fmt.Sprint(a...))
 }
-
-func (l Logger) Logf(format string, a ...interface{}) {
+func (l Logger) logf(format string, a ...interface{}) {
 	if l.writer == nil {
 		return
 	}
 
 	fmt.Fprintf(l.writer, "%s%s\n", l.prefix(), fmt.Sprintf(format, a...))
+}
+
+func (l Logger) Log(a ...interface{}) {
+	if l.level >= 5 {
+		l.log(a...)
+	}
+}
+func (l Logger) Logf(format string, a ...interface{}) {
+	if l.level >= 5 {
+		l.logf(format, a...)
+	}
+}
+
+func (l Logger) Trace(a ...interface{}) {
+	if l.level >= 6 {
+		l.log(a...)
+	}
+}
+func (l Logger) Tracef(format string, a ...interface{}) {
+	if l.level >= 6 {
+		l.logf(format, a...)
+	}
 }
 
 func getFunc() (*runtime.Func, error) {
